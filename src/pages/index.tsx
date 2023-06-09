@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Typography,
+  Container,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { ThemeProvider } from "@mui/material/styles";
+import "../theme";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import theme from "../theme";
 
 const Login = () => {
   const { data: session } = useSession();
@@ -29,7 +40,6 @@ const Login = () => {
 
   useEffect(() => {
     if (session) {
-      // https://avatars.githubusercontent.com/u/52038455?v=4
       const url = session?.user?.image;
       const regex = /\/u\/(\d+)\?v=4/;
       const match = url?.match(regex);
@@ -48,102 +58,156 @@ const Login = () => {
   if (session) {
     return (
       <>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            gap: "15px",
-          }}
-        >
-          <div
-            style={{
+        <Container maxWidth="lg" sx={{ mt: 10 }}>
+          <Box
+            sx={{
               flexDirection: "column",
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
-              gap: "12px",
             }}
           >
             <Avatar
               src={session?.user?.image || ""}
-              sx={{ width: 100, height: 100 }}
+              sx={{
+                width: 150,
+                height: 150,
+                mb: 3,
+                "&:hover": {
+                  border: "2px solid white",
+                  borderRadius: "50%",
+                },
+              }}
             />
-            <Typography variant="h5">Welcome, {session?.user?.name}</Typography>
-            <Typography variant="h6">
-              Signed in as {session?.user?.email}{" "}
-            </Typography>
+
+            <ThemeProvider theme={theme}>
+              <Typography variant="h4" sx={{ color: "white" }}>
+                Welcome, {session?.user?.name}
+              </Typography>
+
+              <Typography sx={{ color: "white" }}>
+                Signed in as {session?.user?.email}
+              </Typography>
+            </ThemeProvider>
             <br />
-            <Button variant="contained" onClick={() => signOut()}>
+            <Button
+              variant="outlined"
+              startIcon={<LogoutIcon />}
+              onClick={() => signOut()}
+              sx={{ mb: 2 }}
+            >
               Sign out
             </Button>
-          </div>
+          </Box>
           {repos && (
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ color: "white" }}>Repo name</TableCell>
-                  <TableCell align="right" sx={{ color: "white" }}>
-                    Language
-                  </TableCell>
-                  <TableCell align="right" sx={{ color: "white" }}>
-                    Watchers&nbsp;
-                  </TableCell>
-                  <TableCell align="right" sx={{ color: "white" }}>
-                    Forks&nbsp;
-                  </TableCell>
-                  <TableCell align="right" sx={{ color: "white" }}>
-                    Id&nbsp;
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {repos?.data?.map((repo: any) => (
-                  <TableRow
-                    key={repo.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ color: "white" }}
-                    >
-                      {repo.name}
+            <TableContainer
+              component={Paper}
+              sx={{
+                mt: 2,
+                backgroundColor: "#191919",
+                borderRadius: "10px",
+                border: "1px solid gray",
+              }}
+            >
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ color: "white" }}>Repo name</TableCell>
+                    <TableCell align="right" sx={{ color: "white" }}>
+                      Language
                     </TableCell>
                     <TableCell align="right" sx={{ color: "white" }}>
-                      {repo.language}
+                      Watchers&nbsp;
                     </TableCell>
                     <TableCell align="right" sx={{ color: "white" }}>
-                      {repo.watchers}
+                      Forks&nbsp;
                     </TableCell>
                     <TableCell align="right" sx={{ color: "white" }}>
-                      {repo.forks}
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      {repo.id}
+                      Id&nbsp;
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {repos?.data?.map((repo: any) => (
+                    <TableRow
+                      key={repo.name}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        color: "white",
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ color: "white" }}
+                      >
+                        {repo.name}
+                      </TableCell>
+                      <TableCell align="right" sx={{ color: "white" }}>
+                        {repo.language}
+                      </TableCell>
+                      <TableCell align="right" sx={{ color: "white" }}>
+                        {repo.watchers}
+                      </TableCell>
+                      <TableCell align="right" sx={{ color: "white" }}>
+                        {repo.forks}
+                      </TableCell>
+                      <TableCell align="right" sx={{ color: "white" }}>
+                        {repo.id}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
           {repos.length === 0 && (
-            <h1 style={{ color: "white" }}>
+            <Typography variant="h6" sx={{ fontWeight: "600", color: "white" }}>
               We were not able to get your data!
-            </h1>
+            </Typography>
           )}
-        </div>
+        </Container>
       </>
     );
   }
   return (
     <>
-      Not signed in <br />
-      <Button variant="contained" onClick={() => signIn()}>
-        Sign in
-      </Button>
+      <Container
+        maxWidth="lg"
+        sx={{
+          display: "flex",
+          height: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            flexDirection: "column",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <Typography variant="h5" sx={{ fontWeight: "600" }}>
+              Login with Github
+            </Typography>
+            <Typography sx={{ color: "darkgray", mt: 1 }}>
+              Press the button below to login into your account
+            </Typography>
+          </ThemeProvider>
+
+          <Button
+            sx={{
+              mt: 2,
+            }}
+            variant="contained"
+            startIcon={<GitHubIcon />}
+            onClick={() => signIn()}
+          >
+            Github
+          </Button>
+        </Box>
+      </Container>
     </>
   );
 };
