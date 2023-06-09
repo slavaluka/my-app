@@ -41,22 +41,22 @@
 }
 
 .MuiButton-contained {
-  background-color: rgb(46, 46, 46);
-  border-color: aliceblue;
+  background-color: rgb(46, 46, 46) !important;
+  border-color: aliceblue !important;
 }
 
 .MuiButton-contained:hover {
-  background-color: rgb(67, 67, 67);
+  background-color: rgb(67, 67, 67) !important;
 }
 
 .MuiButton-outlined {
-  border-color: aliceblue;
-  color: white;
+  border-color: aliceblue !important;
+  color: white !important;
 }
 
 .MuiButton-outlined:hover {
-  color: rgb(172, 44, 44);
-  border-color: rgb(172, 44, 44);
+  color: rgb(172, 44, 44) !important;
+  border-color: rgb(172, 44, 44) !important;
 }
 
 html,
