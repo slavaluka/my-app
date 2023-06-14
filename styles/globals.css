@@ -50,8 +50,8 @@
 }
 
 .MuiButton-outlined {
-  border-color: aliceblue !important;
-  color: white !important;
+  border-color: rgb(255, 255, 255) !important;
+  color: rgb(255, 255, 255) !important;
 }
 
 .MuiButton-outlined:hover {

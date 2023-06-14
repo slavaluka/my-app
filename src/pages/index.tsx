@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import DrawerAppBar from "../components/navbar/navbar";
 import {
   Avatar,
   Button,
@@ -14,10 +15,8 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { ThemeProvider } from "@mui/material/styles";
-import "../theme";
 import axios from "axios";
 import theme from "../theme";
 
@@ -58,7 +57,10 @@ const Login = () => {
   if (session) {
     return (
       <>
-        <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Container maxWidth="lg" sx={{ mt: 12 }}>
+          <ThemeProvider theme={theme}>
+            <DrawerAppBar />
+          </ThemeProvider>
           <Box
             sx={{
               flexDirection: "column",
@@ -89,15 +91,8 @@ const Login = () => {
               </Typography>
             </ThemeProvider>
             <br />
-            <Button
-              variant="outlined"
-              startIcon={<LogoutIcon />}
-              onClick={() => signOut()}
-              sx={{ mb: 2 }}
-            >
-              Sign out
-            </Button>
           </Box>
+
           {repos && (
             <TableContainer
               component={Paper}
