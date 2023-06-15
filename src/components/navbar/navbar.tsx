@@ -1,9 +1,12 @@
-import * as React from "react";
+import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { signOut } from "next-auth/react";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { AccountCircle } from "@mui/icons-material";
+import { signOut, useSession } from "next-auth/react";
+
 import {
   AppBar,
+  Avatar,
   Box,
   CssBaseline,
   Divider,
@@ -12,19 +15,75 @@ import {
   Toolbar,
   Typography,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 interface Props {
   window?: () => Window;
 }
 
 const drawerWidth = 240;
-// const navItems = ["Profile"];
+
+function PopUpButton({ userData }: { userData: any }) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <IconButton
+        size="large"
+        aria-haspopup="true"
+        color="inherit"
+        onClick={handleClickOpen}
+      >
+        <AccountCircle />
+      </IconButton>
+
+      <Dialog fullWidth maxWidth="xs" open={open} onClose={handleClose}>
+        <DialogContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <DialogTitle>User Profile</DialogTitle>
+            <Avatar
+              src={userData.image}
+              sx={{
+                width: 100,
+                height: 100,
+                mb: 2,
+              }}
+            />
+            <Typography>Name: {userData.name}</Typography>
+            <Typography>Email: {userData.email}</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session } = useSession();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -55,7 +114,7 @@ export default function DrawerAppBar(props: Props) {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar component="nav">
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: { xs: "space-between" } }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -77,22 +136,14 @@ export default function DrawerAppBar(props: Props) {
             ⚡ Github Wiki
           </Typography>
 
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+          <Box sx={{ display: { sm: "block" } }}>
+            <PopUpButton userData={session?.user} />
 
             <Button
               variant="outlined"
               startIcon={<LogoutIcon />}
               onClick={() => signOut()}
-              sx={{ ml: 1 }}
+              sx={{ ml: 1, display: { xs: "none" } }}
             >
               Sign out
             </Button>
@@ -106,7 +157,7 @@ export default function DrawerAppBar(props: Props) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },

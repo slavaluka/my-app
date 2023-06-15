@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import DrawerAppBar from "../components/navbar/navbar";
 import {
   Avatar,
