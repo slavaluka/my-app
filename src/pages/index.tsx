@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import DrawerAppBar from "../components/navbar/navbar";
 import TableComponent from "../components/table/TableComponent";
 
@@ -22,6 +23,8 @@ const Login = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [displayedRepos, setDisplayedRepos] = useState<number>(5);
+
+  const router = useRouter();
 
   console.log(session);
 

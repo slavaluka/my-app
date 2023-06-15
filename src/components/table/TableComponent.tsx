@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import {
   Table,
   TableBody,
@@ -26,6 +27,16 @@ const TableComponent: React.FC<TableComponentProps> = ({
   searchResults,
   displayedRepos,
 }) => {
+  const router = useRouter();
+
+  const handleRepoClick = (repo: any) => {
+    console.log(repo);
+    router.push({
+      pathname: `/repos/${repo.id}`,
+      query: { data: JSON.stringify(repo) },
+    });
+  };
+
   return (
     <TableContainer
       component={Paper}
@@ -62,9 +73,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
                 "&:last-child td, &:last-child th": { border: 0 },
                 color: "white",
               }}
+              onClick={() => handleRepoClick(repo)}
             >
               <TableCell component="th" scope="row" sx={{ color: "white" }}>
-                {repo.name}
+                <span style={{ cursor: "pointer" }}>{repo.name}</span>
               </TableCell>
               <TableCell align="right" sx={{ color: "white" }}>
                 {repo.language}
