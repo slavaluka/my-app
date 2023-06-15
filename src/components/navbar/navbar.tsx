@@ -70,8 +70,17 @@ function PopUpButton({ userData }: { userData: any }) {
             />
             <Typography>Name: {userData.name}</Typography>
             <Typography>Email: {userData.email}</Typography>
+            <Button
+              variant="outlined"
+              startIcon={<LogoutIcon />}
+              onClick={() => signOut()}
+              sx={{ mt: 2 }}
+            >
+              Sign out
+            </Button>
           </Box>
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
@@ -91,7 +100,7 @@ export default function DrawerAppBar(props: Props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" color="#fff" sx={{ my: 2 }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
         ⚡ Github Wiki
       </Typography>
       <Divider />
@@ -164,7 +173,6 @@ export default function DrawerAppBar(props: Props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "#222",
             },
           }}
         >

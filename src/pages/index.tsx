@@ -115,7 +115,12 @@ const Login = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               sx={{
                 width: { xs: 250, sm: 450 },
-
+                "& .MuiInputLabel-root": {
+                  color: "white",
+                },
+                "& .MuiInputLabel-outlined.Mui-focused": {
+                  color: "white",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "lightgray",
@@ -126,9 +131,6 @@ const Login = () => {
                   "&.Mui-focused fieldset": {
                     borderColor: "lightgray",
                   },
-                },
-                "& .MuiInputLabel-outlined": {
-                  color: "lightgray",
                 },
                 "& .MuiOutlinedInput-input": {
                   color: "lightgray",
@@ -227,14 +229,12 @@ const Login = () => {
             alignItems: "center",
           }}
         >
-          <ThemeProvider theme={theme}>
-            <Typography variant="h5" sx={{ fontWeight: "600" }}>
-              Login with Github
-            </Typography>
-            <Typography sx={{ color: "darkgray", mt: 1 }}>
-              Press the button below to login into your account
-            </Typography>
-          </ThemeProvider>
+          <Typography variant="h5" sx={{ fontWeight: "600", color: "#fff" }}>
+            Login with Github
+          </Typography>
+          <Typography sx={{ color: "darkgray", mt: 1 }}>
+            Press the button below to login into your account
+          </Typography>
 
           <Button
             sx={{
