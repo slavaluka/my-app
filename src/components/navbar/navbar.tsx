@@ -59,7 +59,7 @@ function PopUpButton({ userData }: { userData: any }) {
               alignItems: "center",
             }}
           >
-            <DialogTitle>User Profile</DialogTitle>
+            <DialogTitle>User's Profile</DialogTitle>
             <Avatar
               src={userData.image}
               sx={{
@@ -68,7 +68,9 @@ function PopUpButton({ userData }: { userData: any }) {
                 mb: 2,
               }}
             />
-            <Typography>Name: {userData.name}</Typography>
+            <Typography>
+              Name: {userData.name ? userData.name : "Alien"}
+            </Typography>
             <Typography>Email: {userData.email}</Typography>
             <Button
               variant="outlined"

@@ -25,7 +25,8 @@ const Login = () => {
   const { data: session } = useSession();
   const [repos, setRepos] = useState<any>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [displayedRepos, setDisplayedRepos] = useState<number>(5);
 
   console.log(session);
 
@@ -66,6 +67,10 @@ const Login = () => {
       setSearchResults(filteredRepos);
     }
   }, [repos, searchQuery]);
+
+  const handleLoadMore = () => {
+    setDisplayedRepos((prevCount) => prevCount + 5);
+  };
 
   if (session) {
     return (
@@ -114,6 +119,7 @@ const Login = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               sx={{
+                borderRadius: "50px",
                 width: { xs: 250, sm: 450 },
                 "& .MuiInputLabel-root": {
                   color: "white",
@@ -139,71 +145,85 @@ const Login = () => {
             />
           </Box>
 
-          {repos && (
-            <TableContainer
-              component={Paper}
-              sx={{
-                mt: 2,
-                backgroundColor: "#191919",
-                borderRadius: "10px",
-                border: "1px solid gray",
-              }}
-            >
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ color: "white" }}>Repo name</TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Language
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Watchers&nbsp;
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Forks&nbsp;
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Id&nbsp;
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {searchResults.map((repo: any) => (
-                    <TableRow
-                      key={repo.name}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        color: "white",
-                      }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ color: "white" }}
-                      >
-                        {repo.name}
+          {searchResults.length > 0 && (
+            <>
+              <TableContainer
+                component={Paper}
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#191919",
+                  borderRadius: "10px",
+                  border: "1px solid gray",
+                }}
+              >
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ color: "white" }}>Repo name</TableCell>
+                      <TableCell align="right" sx={{ color: "white" }}>
+                        Language
                       </TableCell>
                       <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.language}
+                        Watchers&nbsp;
                       </TableCell>
                       <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.watchers}
+                        Forks&nbsp;
                       </TableCell>
                       <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.forks}
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.id}
+                        Id&nbsp;
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {searchResults.slice(0, displayedRepos).map((repo: any) => (
+                      <TableRow
+                        key={repo.name}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          color: "white",
+                        }}
+                      >
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{ color: "white" }}
+                        >
+                          {repo.name}
+                        </TableCell>
+                        <TableCell align="right" sx={{ color: "white" }}>
+                          {repo.language}
+                        </TableCell>
+                        <TableCell align="right" sx={{ color: "white" }}>
+                          {repo.watchers}
+                        </TableCell>
+                        <TableCell align="right" sx={{ color: "white" }}>
+                          {repo.forks}
+                        </TableCell>
+                        <TableCell align="right" sx={{ color: "white" }}>
+                          {repo.id}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {displayedRepos < searchResults.length && (
+                <Box sx={{ p: 2, textAlign: "center" }}>
+                  <Button variant="contained" onClick={handleLoadMore}>
+                    Load More
+                  </Button>
+                </Box>
+              )}
+            </>
           )}
-          {repos.length === 0 && (
-            <Typography variant="h6" sx={{ fontWeight: "600", color: "white" }}>
-              We were not able to get your data!
+
+          {searchResults.length === 0 && (
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "600", color: "white", textAlign: "center" }}
+            >
+              Oops, something went wrong 👽
             </Typography>
           )}
         </Container>
