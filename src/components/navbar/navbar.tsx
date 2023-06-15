@@ -59,7 +59,7 @@ function PopUpButton({ userData }: { userData: any }) {
               alignItems: "center",
             }}
           >
-            <DialogTitle>User's Profile</DialogTitle>
+            <DialogTitle>Your Profile</DialogTitle>
             <Avatar
               src={userData.image}
               sx={{

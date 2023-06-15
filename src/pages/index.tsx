@@ -122,7 +122,7 @@ const Login = () => {
                 borderRadius: "50px",
                 width: { xs: 250, sm: 450 },
                 "& .MuiInputLabel-root": {
-                  color: "white",
+                  color: "gray",
                 },
                 "& .MuiInputLabel-outlined.Mui-focused": {
                   color: "white",
