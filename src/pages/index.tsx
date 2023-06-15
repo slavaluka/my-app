@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TextField,
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { ThemeProvider } from "@mui/material/styles";
@@ -23,6 +24,9 @@ import theme from "../theme";
 const Login = () => {
   const { data: session } = useSession();
   const [repos, setRepos] = useState<any>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   console.log(session);
 
   const fetchData = async (id: string) => {
@@ -53,6 +57,15 @@ const Login = () => {
       }
     }
   }, [session]);
+
+  useEffect(() => {
+    if (repos && repos.data) {
+      const filteredRepos = repos.data.filter((repo: any) =>
+        repo.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(filteredRepos);
+    }
+  }, [repos, searchQuery]);
 
   if (session) {
     return (
@@ -93,6 +106,37 @@ const Login = () => {
             <br />
           </Box>
 
+          <Box sx={{ p: 2, textAlign: "center" }}>
+            <TextField
+              label="Search Repositories"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{
+                width: { xs: 250, sm: 450 },
+
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "lightgray",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "lightgray",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "lightgray",
+                  },
+                },
+                "& .MuiInputLabel-outlined": {
+                  color: "lightgray",
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "lightgray",
+                },
+              }}
+            />
+          </Box>
+
           {repos && (
             <TableContainer
               component={Paper}
@@ -122,7 +166,7 @@ const Login = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {repos?.data?.map((repo: any) => (
+                  {searchResults.map((repo: any) => (
                     <TableRow
                       key={repo.name}
                       sx={{
@@ -164,6 +208,7 @@ const Login = () => {
       </>
     );
   }
+
   return (
     <>
       <Container
