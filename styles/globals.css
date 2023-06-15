@@ -48,16 +48,7 @@
 .MuiButton-contained:hover {
   background-color: rgb(67, 67, 67) !important;
 }
-/* 
-.MuiButton-outlined {
-  border-color: rgb(255, 255, 255) !important;
-  color: rgb(255, 255, 255) !important;
-}
 
-.MuiButton-outlined:hover {
-  color: rgb(172, 44, 44) !important;
-  border-color: rgb(172, 44, 44) !important;
-} */
 html,
 body {
   overflow-x: hidden;
