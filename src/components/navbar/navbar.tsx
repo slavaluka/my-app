@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import ProfilePopup from "../pop-up/ProfilePopup";
 import { signOut, useSession } from "next-auth/react";
+import Link from "@mui/material/Link";
 
 interface Props {
   window?: () => Window;
@@ -33,7 +34,9 @@ export default function DrawerAppBar(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        ⚡ Github API
+        <Link href="/" color="inherit">
+          ⚡ Github API
+        </Link>
       </Typography>
       <Divider />
     </Box>
@@ -65,7 +68,9 @@ export default function DrawerAppBar(props: Props) {
               display: { xs: "none", sm: "block" },
             }}
           >
-            ⚡ Github API
+            <Link href="/" color="inherit" underline="none">
+              ⚡ Github API
+            </Link>
           </Typography>
 
           <Box sx={{ display: { sm: "block" } }}>

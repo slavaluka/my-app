@@ -7,27 +7,34 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-
-interface RepoData {
-  full_name: string;
-  description: string;
-  visibility: string;
-  forks: number;
-  clone_url: string;
-  language: string;
-}
+import axios from "axios";
+import DrawerAppBar from "../../components/navbar/navbar";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "@/theme";
 
 const RepoPage = () => {
   const router = useRouter();
-  const { id, data } = router.query;
-  const [repoData, setRepoData] = useState<RepoData | null>(null);
+  const { id } = router.query;
+  const [repoData, setRepoData] = useState<any>(null);
 
   useEffect(() => {
-    if (data) {
-      const parsedData = JSON.parse(data.toString());
-      setRepoData(parsedData);
-    }
-  }, [data]);
+    const fetchData = async () => {
+      try {
+        if (id) {
+          const res = await axios.get<any>(
+            `https://api.github.com/repositories/${id}`
+          );
+          setRepoData(res.data);
+        } else {
+          console.log("No repository ID found");
+        }
+      } catch (error) {
+        console.error("Error fetching repository data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   if (!repoData) {
     return (
@@ -55,24 +62,27 @@ const RepoPage = () => {
         height: "100vh",
       }}
     >
+      <ThemeProvider theme={theme}>
+        <DrawerAppBar />
+      </ThemeProvider>
       <Paper elevation={3} sx={{ p: 3 }}>
         <Typography variant="h4" gutterBottom>
           {repoData.full_name}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          {repoData.description}
+          Description: {repoData.description}
         </Typography>
-        <Typography variant="body2" gutterBottom>
-          Visibility: {repoData.visibility}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          Number of Forks: {repoData.forks}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          Clone URL: {repoData.clone_url}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
+        <Typography variant="body1" gutterBottom>
           Language: {repoData.language}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Watchers: {repoData.watchers_count}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Forks: {repoData.forks_count}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          ID: {repoData.id}
         </Typography>
       </Paper>
     </Container>

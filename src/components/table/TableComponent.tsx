@@ -29,12 +29,9 @@ const TableComponent: React.FC<TableComponentProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleRepoClick = (repo: any) => {
+  const handleRepoClick = (repo: Repo) => {
     console.log(repo);
-    router.push({
-      pathname: `/repos/${repo.id}`,
-      query: { data: JSON.stringify(repo) },
-    });
+    router.push(`/repos/${repo.id}`, undefined, { shallow: true });
   };
 
   return (
@@ -72,6 +69,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
               sx={{
                 "&:last-child td, &:last-child th": { border: 0 },
                 color: "white",
+                cursor: "pointer",
               }}
               onClick={() => handleRepoClick(repo)}
             >

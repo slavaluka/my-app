@@ -52,7 +52,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ userData }) => {
           >
             <DialogTitle>Your Profile</DialogTitle>
             <Avatar
-              src={userData.image}
+              src={userData?.image}
               sx={{
                 width: 100,
                 height: 100,
