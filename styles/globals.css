@@ -37,7 +37,7 @@
 }
 
 ::selection {
-  background-color: rgb(42, 49, 71);
+  background-color: rgb(255, 211, 17);
 }
 
 .MuiButton-contained {
@@ -47,16 +47,6 @@
 
 .MuiButton-contained:hover {
   background-color: rgb(67, 67, 67) !important;
-}
-
-.MuiButton-outlined {
-  border-color: aliceblue !important;
-  color: white !important;
-}
-
-.MuiButton-outlined:hover {
-  color: rgb(172, 44, 44) !important;
-  border-color: rgb(172, 44, 44) !important;
 }
 
 html,

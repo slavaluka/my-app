@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import DrawerAppBar from "../components/navbar/navbar";
+import TableComponent from "../components/table/TableComponent";
+
 import {
   Avatar,
   Button,
   Typography,
   Container,
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  TextField,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { ThemeProvider } from "@mui/material/styles";
-import "../theme";
 import axios from "axios";
 import theme from "../theme";
 
 const Login = () => {
   const { data: session } = useSession();
   const [repos, setRepos] = useState<any>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [displayedRepos, setDisplayedRepos] = useState<number>(5);
+
+  const router = useRouter();
+
   console.log(session);
 
   const fetchData = async (id: string) => {
@@ -55,10 +57,26 @@ const Login = () => {
     }
   }, [session]);
 
+  useEffect(() => {
+    if (repos && repos.data) {
+      const filteredRepos = repos.data.filter((repo: any) =>
+        repo.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(filteredRepos);
+    }
+  }, [repos, searchQuery]);
+
+  const handleLoadMore = () => {
+    setDisplayedRepos((prevCount) => prevCount + 5);
+  };
+
   if (session) {
     return (
       <>
-        <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Container maxWidth="lg" sx={{ mt: 12 }}>
+          <ThemeProvider theme={theme}>
+            <DrawerAppBar />
+          </ThemeProvider>
           <Box
             sx={{
               flexDirection: "column",
@@ -89,86 +107,72 @@ const Login = () => {
               </Typography>
             </ThemeProvider>
             <br />
-            <Button
-              variant="outlined"
-              startIcon={<LogoutIcon />}
-              onClick={() => signOut()}
-              sx={{ mb: 2 }}
-            >
-              Sign out
-            </Button>
           </Box>
-          {repos && (
-            <TableContainer
-              component={Paper}
+
+          <Box sx={{ p: 2, textAlign: "center" }}>
+            <TextField
+              label="Search Repositories"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               sx={{
-                mt: 2,
-                backgroundColor: "#191919",
-                borderRadius: "10px",
-                border: "1px solid gray",
+                borderRadius: "50px",
+                width: { xs: 250, sm: 450 },
+                "& .MuiInputLabel-root": {
+                  color: "gray",
+                },
+                "& .MuiInputLabel-outlined.Mui-focused": {
+                  color: "white",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "lightgray",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "lightgray",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "lightgray",
+                  },
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "lightgray",
+                },
               }}
-            >
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ color: "white" }}>Repo name</TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Language
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Watchers&nbsp;
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Forks&nbsp;
-                    </TableCell>
-                    <TableCell align="right" sx={{ color: "white" }}>
-                      Id&nbsp;
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {repos?.data?.map((repo: any) => (
-                    <TableRow
-                      key={repo.name}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        color: "white",
-                      }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ color: "white" }}
-                      >
-                        {repo.name}
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.language}
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.watchers}
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.forks}
-                      </TableCell>
-                      <TableCell align="right" sx={{ color: "white" }}>
-                        {repo.id}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            />
+          </Box>
+
+          {searchResults.length > 0 && (
+            <>
+              <TableComponent
+                searchResults={searchResults}
+                displayedRepos={displayedRepos}
+              />
+
+              {displayedRepos < searchResults.length && (
+                <Box sx={{ p: 2, textAlign: "center" }}>
+                  <Button variant="contained" onClick={handleLoadMore}>
+                    Load More
+                  </Button>
+                </Box>
+              )}
+            </>
           )}
-          {repos.length === 0 && (
-            <Typography variant="h6" sx={{ fontWeight: "600", color: "white" }}>
-              We were not able to get your data!
+
+          {searchResults.length === 0 && (
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "600", color: "white", textAlign: "center" }}
+            >
+              Oops, something went wrong 👽
             </Typography>
           )}
         </Container>
       </>
     );
   }
+
   return (
     <>
       <Container
@@ -187,14 +191,12 @@ const Login = () => {
             alignItems: "center",
           }}
         >
-          <ThemeProvider theme={theme}>
-            <Typography variant="h5" sx={{ fontWeight: "600" }}>
-              Login with Github
-            </Typography>
-            <Typography sx={{ color: "darkgray", mt: 1 }}>
-              Press the button below to login into your account
-            </Typography>
-          </ThemeProvider>
+          <Typography variant="h5" sx={{ fontWeight: "600", color: "#fff" }}>
+            Login with Github
+          </Typography>
+          <Typography sx={{ color: "darkgray", mt: 1 }}>
+            Press the button below to login into your account
+          </Typography>
 
           <Button
             sx={{
